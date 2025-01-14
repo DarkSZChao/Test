@@ -1,17 +1,10 @@
 import asyncio
 import os
-import tkinter as tk
-from tkinter import filedialog
 
 from nicegui import app, ui, run
 
 # set default saving dir
 DEFAULT_SAVING_DIR = os.path.join(os.getcwd(), "downloads")
-
-# create Tkinter for dir selection
-root = tk.Tk()
-root.withdraw()  # hide
-root.attributes("-topmost", 1)  # top screen the dir selection dialog
 
 # expose the background image dir
 app.add_static_files("/static", "static")
