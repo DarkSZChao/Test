@@ -1,30 +1,80 @@
-from nicegui import ui
+import asyncio
+import os
+import tkinter as tk
+from tkinter import filedialog
 
+from nicegui import app, ui, run
 
-def greet():
-    name = name_input.value
-    greeting_label.text = f'Hello, {name}!'
+# set default saving dir
+DEFAULT_SAVING_DIR = os.path.join(os.getcwd(), "downloads")
 
-ui.add_head_html('''
+# create Tkinter for dir selection
+root = tk.Tk()
+root.withdraw()  # hide
+root.attributes("-topmost", 1)  # top screen the dir selection dialog
+
+# expose the background image dir
+app.add_static_files("/static", "static")
+
+# set background
+ui.add_head_html("""
 <style>
     body {
-        background: url('https://github.com/DarkSZChao/Test/blob/main/background.jpg');
+        background-image: url('/static/background.jpg');
         background-size: cover;
         background-position: center;
         margin: 0;
-        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        padding: 20px;
+        max-width: 400px;
+        margin: auto;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .centered {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
     }
 </style>
-''')
+""")
 
-# 创建一个简单的文本输入框和按钮
-ui.label('Enter your name:')
-name_input = ui.input().style('width: 200px;')
+previous_buffer = ''
+radio_method_options = ['Single YouTube URL', 'YouTube Playlist URL']
 
-greeting_label = ui.label('')
+# define GUI items
+with ui.card().style('max-width: 800px;').classes('container'):
+    with ui.row().style('width: 100%'):
+        ui.label("YouTube MP3 Downloader").classes("text-h4 text-center")
 
-# 创建一个按钮，点击时会显示问候
-ui.button('Greet me!', on_click=greet)
+    with ui.row().style('width: 100%'):
+        radio_method = ui.radio(radio_method_options, value='Single YouTube URL').props('inline')
+        radio_method.disable()
+    with ui.row().style('width: 100%'):
+        input_url = ui.input(label="Pls enter YouTube URL",
+                             placeholder="https://www.youtube.com/watch?v=example").style('width: 100%;')
 
-# 启动应用
-ui.run(host="0.0.0.0", port=5000)
+with ui.card().style('max-width: 800px;').classes('container'):
+    with ui.row().style('width: 100%'):
+        ui.label('Save MP3 to...').classes("text-h5 text-center")
+
+    with ui.row().style('width: 100%').classes('justify-between'):
+        input_dir = ui.input(label='Directory:', placeholder=DEFAULT_SAVING_DIR).style('width: 85%;')
+        button_dir = ui.button('Select').style('margin-top: 10px')
+
+    with ui.row().style('width: 100%'):
+        label_info = ui.label('Downloader ready...').style('color: green; margin-top: 10px').classes("text-h6 text-center")
+
+    with ui.row().style('width: 100%').classes('justify-end'):
+        button_download = ui.button("Download MP3").style('margin-top: 10px')
+
+if __name__ == '__main__':
+    import multiprocessing
+
+    multiprocessing.freeze_support()  # freeze_support() is necessary for pyinstaller
+    ui.run(reload=False, host="0.0.0.0", port=5050)  # reload=False is necessary for pyinstaller
