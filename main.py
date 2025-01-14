@@ -66,8 +66,4 @@ with ui.card().style('max-width: 800px;').classes('container'):
     with ui.row().style('width: 100%').classes('justify-end'):
         button_download = ui.button("Download MP3").style('margin-top: 10px')
 
-if __name__ == '__main__':
-    import multiprocessing
-
-    multiprocessing.freeze_support()  # freeze_support() is necessary for pyinstaller
-    ui.run(reload=False, host="0.0.0.0", port=5050)  # reload=False is necessary for pyinstaller
+ui.run(host="0.0.0.0", port=5050)  # reload=False is necessary for pyinstaller
