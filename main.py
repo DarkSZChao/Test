@@ -16,4 +16,4 @@ greeting_label = ui.label('')
 ui.button('Greet me!', on_click=greet)
 
 # 启动应用
-ui.run()
+ui.run(host="0.0.0.0", port=5000)
